@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-const DiaryEditor = () => {
+const DiaryEditor = ({ onCreate }) => {
 
     const authorInput = useRef();
     const contentInput = useRef();
@@ -14,8 +14,6 @@ const DiaryEditor = () => {
     const handleChangeState = (e) => {
         setState({
             ...state,
-            /*괄호표기법. 입력한 것이 content면, [content]: content의 value로 들어감!
-            author창을 입력하면, [author]: author의 value!*/
             [e.target.name]: e.target.value,
         });
     };
@@ -23,17 +21,25 @@ const DiaryEditor = () => {
     const handleSubmit = () => {
         if(state.author.length < 1) {
             alert("작성자는 최소 1글자 이상 입력해주세요");
-            // focus 주기 - useRef로
+            // 작성자 input focus - useRef로
             authorInput.current.focus();
-            //더이상 진행안되도록 return!
             return;
         }
 
         if(state.content.length < 5) {
             alert("일기 본문은 최소 5글자 이상 입력해주세요");
+           // 일기 본문 focus
             contentInput.current.focus();
             return;
         }
+        // onCreate 호출
+        onCreate(state.author, state.content, state.emotion);
+        alert("저장 성공");
+        setState({
+            author: "",
+            content: "",
+            emotion: 1,
+        });
     };
     
     return (
